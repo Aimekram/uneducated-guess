@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
 
 function App() {
   return (
-    <main className="text-center flex flex-col gap-8 items-center justify-center min-h-screen">
+    <main className="text-center flex flex-col gap-8 items-center justify-center min-h-[80vh]">
       <h1 className="font-medium text-2xl">Welcome to Uneducated Guess</h1>
       <div className="flex gap-4">
         <Link

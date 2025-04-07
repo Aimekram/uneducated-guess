@@ -7,6 +7,7 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/uneducated-guess/", // needed for gh-pages
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: true }),
     viteReact(),

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/(auth)/sign-in")({
         throw error;
       }
 
-      navigate({ to: "/" });
+      navigate({ to: "/dashboard" });
     };
 
     return <SignInForm onSubmit={handleSignIn} />;

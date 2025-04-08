@@ -21,7 +21,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="mb-4 p-4 flex justify-between items-center border-b border-border">
+    <header className="mb-4 p-4 flex justify-between items-center border-b border-border h-16">
       <Link to="/" className="font-bold text-lg">
         Uneducated Guess
       </Link>

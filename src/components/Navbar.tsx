@@ -12,7 +12,7 @@ export const Navbar = () => {
     setIsSigningOutLoading(true);
     try {
       await authService.signOut();
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/" });
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {

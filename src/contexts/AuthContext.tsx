@@ -14,7 +14,11 @@ type AuthContextType = {
   isAuthLoading: boolean;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  session: null,
+  isAuthLoading: true,
+});
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
@@ -23,11 +27,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsAuthLoading(false);
-    });
+    const fetchSession = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error("Error fetching auth session:", error);
+      } finally {
+        setIsAuthLoading(false);
+      }
+    };
+
+    fetchSession();
 
     // Listen for auth changes
     const {

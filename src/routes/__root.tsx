@@ -1,14 +1,18 @@
 import { Navbar } from "@/components/Navbar";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import type { useAuth } from "@/contexts/AuthContext";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
-export const Route = createRootRoute({
+type MyRouterContext = {
+  auth: ReturnType<typeof useAuth>;
+};
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
-    <AuthProvider>
+    <>
       <Navbar />
       <Outlet />
       <TanStackRouterDevtools />
-    </AuthProvider>
+    </>
   ),
 });

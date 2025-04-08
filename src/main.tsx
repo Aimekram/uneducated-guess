@@ -5,13 +5,20 @@ import ReactDOM from "react-dom/client";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
-import "./styles.css";
+import { AuthProvider, useAuth } from "./contexts/AuthContext.tsx";
 import reportWebVitals from "./reportWebVitals.ts";
+import "./styles.css";
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: {},
+  context: {
+    auth: {
+      user: null,
+      session: null,
+      isAuthLoading: true,
+    },
+  },
   defaultPreload: "intent",
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -26,13 +33,27 @@ declare module "@tanstack/react-router" {
   }
 }
 
+function InnerApp() {
+  const auth = useAuth();
+
+  return <RouterProvider router={router} context={{ auth }} />;
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <InnerApp />
+    </AuthProvider>
+  );
+}
+
 // Render the app
 const rootElement = document.getElementById("app");
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <App />
     </StrictMode>,
   );
 }

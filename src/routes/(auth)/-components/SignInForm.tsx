@@ -1,5 +1,6 @@
 import { AuthError } from "@supabase/supabase-js";
 import { useForm } from "@tanstack/react-form";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import {
@@ -55,7 +56,7 @@ export const SignInForm = ({
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <>
       <h1 className="text-2xl font-bold">Sign in</h1>
 
       {onSubmitError && (
@@ -122,11 +123,11 @@ export const SignInForm = ({
 
         <p className="text-sm text-center mt-4 text-gray-600">
           Don't have an account?{" "}
-          <a href="/sign-up" className="text-blue-600 hover:underline">
+          <Link to="/sign-up" className="text-blue-600 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </form>
-    </div>
+    </>
   );
 };

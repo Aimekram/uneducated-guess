@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -33,19 +34,35 @@ declare module "@tanstack/react-router" {
   }
 }
 
-function InnerApp() {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 30, // 30 minutes
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
+
+const InnerApp = () => {
   const auth = useAuth();
 
   return <RouterProvider router={router} context={{ auth }} />;
-}
+};
 
-function App() {
+const App = () => {
   return (
-    <AuthProvider>
-      <InnerApp />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <InnerApp />
+      </AuthProvider>
+    </QueryClientProvider>
   );
-}
+};
 
 // Render the app
 const rootElement = document.getElementById("app");

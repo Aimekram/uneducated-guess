@@ -5,6 +5,7 @@
   "homepage": "https://aimekram.github.io/uneducated-guess",
   "scripts": {
     "start": "vite --port 3000",
+    "update-types": "npx --yes supabase gen types typescript --linked > src/types/supabase.ts",
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",

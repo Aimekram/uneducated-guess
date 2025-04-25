@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
 
 export const QuestionSetsList = () => {
-  const getQuestsionSetsRequest = useQuery(queries.questsionSets.getAll);
+  const getQuestsionSetsRequest = useQuery(queries.questionSets.getAll);
 
   if (getQuestsionSetsRequest.isError) {
     return (
@@ -40,10 +40,9 @@ export const QuestionSetsList = () => {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {getQuestsionSetsRequest.data.map((set) => (
           <Card key={set.id} className="p-4 hover:shadow-md transition-shadow">
-            <h3 className="font-semibold">{set.title}</h3>
-            <p className="text-sm text-gray-500">{set.description}</p>
+            <h3 className="font-semibold">{set.name}</h3>
             <p className="text-xs text-gray-400 mt-2">
-              {set.questions?.length || 0} questions
+              {`${set.questions_count} questions`}
             </p>
           </Card>
         ))}

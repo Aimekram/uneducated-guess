@@ -18,4 +18,25 @@ export const queries = {
       },
     },
   },
+  questionsWithAnswers: {
+    getBySetId: (setId: string) => ({
+      queryKey: ["questionsWithAnswers", "getBySetId", setId],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("questions")
+          .select(`
+                id,
+                text,
+                answers (
+                  id,
+                  text,
+                  points
+                )
+              `)
+          .eq("set_id", setId);
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    }),
+  },
 };

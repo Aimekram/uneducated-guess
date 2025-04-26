@@ -1,17 +1,16 @@
-import { Card } from "@/components/ui";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
-import { type PropsWithChildren, useState } from "react";
+import type { PropsWithChildren } from "react";
 import { QandAList } from "./QandAList";
 
 export const QuestionSetsList = () => {
-  const [expandedSetId, setExpandedSetId] = useState<string | null>(null);
-
   const getQuestsionSetsRequest = useQuery(queries.questionSets.getAll);
-
-  const toggleAccordion = (setId: string) => {
-    setExpandedSetId(expandedSetId === setId ? null : setId);
-  };
 
   if (getQuestsionSetsRequest.isError) {
     return (
@@ -44,37 +43,31 @@ export const QuestionSetsList = () => {
 
   return (
     <Layout>
-      <div className="grid gap-6 grid-cols-1">
+      <Accordion type="single" collapsible className="grid gap-4 grid-cols-1">
         {getQuestsionSetsRequest.data.map((set) => (
-          <div key={set.id} className="flex flex-col">
-            <Card className="p-4 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold">{set.name}</h3>
-                  <p className="text-xs text-gray-400 mt-1">
+          <AccordionItem
+            key={set.id}
+            value={set.id}
+            className="bg-card rounded-lg shadow-sm hover:shadow-md transition-all"
+          >
+            <AccordionTrigger className="px-4 py-3 hover:no-underline cursor-pointer">
+              <div className="flex justify-between items-center w-full pr-4">
+                <div className="text-left">
+                  <h3 className="font-semibold text-lg">{set.name}</h3>
+                  <p className="text-xs text-muted-foreground">
                     {`${set.questions_count} questions`}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion(set.id)}
-                  className="px-4 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
-                >
-                  {expandedSetId === set.id
-                    ? "Hide Questions"
-                    : "Show Questions"}
-                </button>
               </div>
-            </Card>
-
-            {expandedSetId === set.id && (
-              <div className="mt-2 pl-4 pt-2 pb-6 border-l-2 border-blue-200">
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="pt-2 pb-4 px-4">
                 <QandAList setId={set.id} />
               </div>
-            )}
-          </div>
+            </AccordionContent>
+          </AccordionItem>
         ))}
-      </div>
+      </Accordion>
     </Layout>
   );
 };

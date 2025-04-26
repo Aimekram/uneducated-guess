@@ -36,30 +36,22 @@ export const QandAList = ({ setId }: QandAListProps) => {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold mb-4">Questions & Answers</h2>
-
+    <ol className="space-y-8">
       {getQuestionsWithAnswersRequest.data.map((question, qIndex) => (
-        <div
-          key={question.id}
-          className="bg-white rounded-lg shadow p-5 border border-gray-100"
-        >
-          <h3 className="text-xl font-semibold mb-3">
+        <li key={question.id} className="border-b border-gray-100 pb-6">
+          <h3 className="text-md font-medium mb-2">
             {qIndex + 1}. {question.text}
           </h3>
-
-          <div className="pl-5 space-y-2">
-            <h4 className="text-sm font-medium text-gray-500 mb-2">Answers:</h4>
-
+          <div className="px-4 mt-3">
             {question.answers.length > 0 ? (
-              <ul className="space-y-3">
+              <ul className="space-y-1.5">
                 {question.answers.map((answer) => (
                   <li
                     key={answer.id}
-                    className="flex justify-between items-center p-2.5 rounded-md bg-gray-50 hover:bg-gray-100"
+                    className="flex justify-between items-center p-1.5 rounded bg-gray-50"
                   >
                     <span>{answer.text}</span>
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                    <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium ml-2">
                       {answer.points} points
                     </span>
                   </li>
@@ -71,8 +63,8 @@ export const QandAList = ({ setId }: QandAListProps) => {
               </p>
             )}
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 };

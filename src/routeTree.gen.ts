@@ -17,6 +17,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as authSignUpImport } from './routes/(auth)/sign-up'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard/route'
+import { Route as ProtectedSetSetIdImport } from './routes/_protected/set/$setId'
 
 // Create/Update Routes
 
@@ -51,6 +52,12 @@ const authSignInRoute = authSignInImport.update({
 const ProtectedDashboardRouteRoute = ProtectedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+
+const ProtectedSetSetIdRoute = ProtectedSetSetIdImport.update({
+  id: '/set/$setId',
+  path: '/set/$setId',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 
@@ -100,6 +107,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignUpImport
       parentRoute: typeof authRouteImport
     }
+    '/_protected/set/$setId': {
+      id: '/_protected/set/$setId'
+      path: '/set/$setId'
+      fullPath: '/set/$setId'
+      preLoaderRoute: typeof ProtectedSetSetIdImport
+      parentRoute: typeof ProtectedRouteImport
+    }
   }
 }
 
@@ -121,10 +135,12 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRouteRoute: typeof ProtectedDashboardRouteRoute
+  ProtectedSetSetIdRoute: typeof ProtectedSetSetIdRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRouteRoute: ProtectedDashboardRouteRoute,
+  ProtectedSetSetIdRoute: ProtectedSetSetIdRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
@@ -137,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof ProtectedDashboardRouteRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/set/$setId': typeof ProtectedSetSetIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -145,6 +162,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardRouteRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/set/$setId': typeof ProtectedSetSetIdRoute
 }
 
 export interface FileRoutesById {
@@ -155,13 +173,14 @@ export interface FileRoutesById {
   '/_protected/dashboard': typeof ProtectedDashboardRouteRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
+  '/_protected/set/$setId': typeof ProtectedSetSetIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/dashboard' | '/sign-in' | '/sign-up'
+  fullPaths: '/' | '' | '/dashboard' | '/sign-in' | '/sign-up' | '/set/$setId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/dashboard' | '/sign-in' | '/sign-up'
+  to: '/' | '' | '/dashboard' | '/sign-in' | '/sign-up' | '/set/$setId'
   id:
     | '__root__'
     | '/'
@@ -170,6 +189,7 @@ export interface FileRouteTypes {
     | '/_protected/dashboard'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
+    | '/_protected/set/$setId'
   fileRoutesById: FileRoutesById
 }
 
@@ -213,7 +233,8 @@ export const routeTree = rootRoute
     "/_protected": {
       "filePath": "_protected/route.tsx",
       "children": [
-        "/_protected/dashboard"
+        "/_protected/dashboard",
+        "/_protected/set/$setId"
       ]
     },
     "/_protected/dashboard": {
@@ -227,6 +248,10 @@ export const routeTree = rootRoute
     "/(auth)/sign-up": {
       "filePath": "(auth)/sign-up.tsx",
       "parent": "/(auth)"
+    },
+    "/_protected/set/$setId": {
+      "filePath": "_protected/set/$setId.tsx",
+      "parent": "/_protected"
     }
   }
 }

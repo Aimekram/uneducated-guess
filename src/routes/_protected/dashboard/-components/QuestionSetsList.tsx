@@ -4,8 +4,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { Edit } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import { QandAList } from "./QandAList";
 
@@ -50,7 +53,7 @@ export const QuestionSetsList = () => {
             value={set.id}
             className="bg-card rounded-lg shadow-sm hover:shadow-md transition-all"
           >
-            <AccordionTrigger className="px-4 py-3 hover:no-underline cursor-pointer">
+            <AccordionTrigger className="px-4 py-3 hover:no-underline cursor-pointer [&>svg]:mt-3">
               <div className="flex justify-between items-center w-full pr-4">
                 <div className="text-left">
                   <h3 className="font-semibold text-lg">{set.name}</h3>
@@ -58,6 +61,18 @@ export const QuestionSetsList = () => {
                     {`${set.questions_count} questions`}
                   </p>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  onClick={(e) => e.stopPropagation()}
+                  className="opacity-70 hover:opacity-100"
+                >
+                  <Link to="/set/$setId" params={{ setId: set.id }}>
+                    <Edit className="h-4 w-4 mr-1" />
+                    <span>Edit</span>
+                  </Link>
+                </Button>
               </div>
             </AccordionTrigger>
             <AccordionContent>

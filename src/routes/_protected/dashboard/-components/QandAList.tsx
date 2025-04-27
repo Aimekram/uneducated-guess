@@ -6,8 +6,6 @@ type QandAListProps = {
 };
 
 export const QandAList = ({ setId }: QandAListProps) => {
-  console.log("serid", setId);
-
   const getQuestionsWithAnswersRequest = useQuery(
     queries.questionsWithAnswers.getBySetId(setId),
   );

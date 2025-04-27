@@ -9,12 +9,12 @@ export const queries = {
         const { data, error } = await supabase.from("question_sets").select(`
             id,
             name,
-            questions_count: questions(count)
+            questionsCount: questions(count)
           `);
         if (error) throw new Error(error.message);
         return data.map((set) => ({
           ...set,
-          questions_count: set.questions_count?.[0]?.count ?? 0,
+          questionsCount: set.questionsCount?.[0]?.count ?? 0,
         }));
       },
     },
@@ -26,23 +26,37 @@ export const queries = {
           .select(`
               id,
               name,
-              questions_count: questions(count)
+              questionsCount: questions(count)
             `)
           .eq("id", setId)
           .single();
         if (error) throw new Error(error.message);
         return {
           ...data,
-          questions_count: data.questions_count?.[0]?.count ?? 0,
+          questionsCount: data.questionsCount?.[0]?.count ?? 0,
         };
       },
     }),
     updateById: (setId: string) => ({
-      mutationFn: async (data: { name: string }) => {
-        const { error } = await supabase
+      mutationFn: async ({ name }: { name: string }) => {
+        const { data, error } = await supabase
           .from("question_sets")
-          .update({ name: data.name })
-          .eq("id", setId);
+          .update({ name })
+          .eq("id", setId)
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    }),
+  },
+  questions: {
+    updateById: (questionId: string) => ({
+      mutationFn: async ({ text }: { text: string }) => {
+        const { data, error } = await supabase
+          .from("questions")
+          .update({ text })
+          .eq("id", questionId);
         if (error) throw new Error(error.message);
         return data;
       },
@@ -56,6 +70,7 @@ export const queries = {
           .from("questions")
           .select(`
                 id,
+                setId:set_id,
                 text,
                 answers (
                   id,

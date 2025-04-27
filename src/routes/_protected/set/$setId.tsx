@@ -1,8 +1,9 @@
-// import { Alert, AlertDescription } from "@/components/ui/alert";
-// import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { QuestionsList } from "./-components/QuestionsList";
 import { SetNameEditor } from "./-components/SetNameEditor";
 
 export const Route = createFileRoute("/_protected/set/$setId")({
@@ -10,47 +11,44 @@ export const Route = createFileRoute("/_protected/set/$setId")({
 });
 
 function RouteComponent() {
-  // Access the id parameter from the route
   const { setId } = Route.useParams();
 
-  const getQuestionsWithAnswersRequest = useQuery(
-    queries.questionsWithAnswers.getBySetId(setId),
-  );
+  const getQuestionSetRequest = useQuery(queries.questionSets.getById(setId));
 
-  // Handle loading state
-  if (getQuestionsWithAnswersRequest.isLoading) {
+  if (getQuestionSetRequest.isLoading) {
     return (
-      <div className="space-y-4">
-        {/* <Skeleton className="h-10 w-3/4" />
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" /> */}
+      <div className="container mx-auto py-4">
+        <Skeleton className="h-9 w-3/4 mb-8" />
+        <Skeleton className="h-7 w-3/4 mb-2" />
+        <Skeleton className="h-48 w-full mb-6" />
+        <Skeleton className="h-48 w-full" />
       </div>
     );
   }
 
-  // Handle error state
-  if (getQuestionsWithAnswersRequest.isError) {
+  if (getQuestionSetRequest.isError) {
     return (
-      //   <Alert variant="destructive">
-      //     <AlertDescription>
-      <p>Error loading question set. Please try again.</p>
-      //     </AlertDescription>
-      //   </Alert>
+      <Alert variant="destructive">
+        <AlertDescription>
+          Error loading question set. Please try again.
+        </AlertDescription>
+      </Alert>
     );
   }
 
-  // Handle not found
-  //   if (!questionSetQuery.data) {
-  //     return (
-  //       <Alert>
-  //         <AlertDescription>Question set not found.</AlertDescription>
-  //       </Alert>
-  //     );
-  //   }
+  if (!getQuestionSetRequest.data) {
+    return (
+      <Alert>
+        <AlertDescription>Question set not found.</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
       <SetNameEditor setId={setId} />
+      <h2 className="text-lg font-semibold mb-2">Questions</h2>
+      <QuestionsList setId={setId} />
     </div>
   );
 }

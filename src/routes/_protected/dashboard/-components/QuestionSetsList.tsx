@@ -58,7 +58,7 @@ export const QuestionSetsList = () => {
                 <div className="text-left">
                   <h3 className="font-semibold text-lg">{set.name}</h3>
                   <p className="text-xs text-muted-foreground">
-                    {`${set.questions_count} questions`}
+                    {`${set.questionsCount} questions`}
                   </p>
                 </div>
                 <Button

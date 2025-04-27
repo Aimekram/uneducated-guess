@@ -4,7 +4,9 @@ A fun family game where making your best guess is all that matters!
 
 ## Live Demo
 
-🎮 [Play Uneducated Guess](https://aimekram.github.io/uneducated-guess/)
+🚧 Work in progress, signins disabled for now, sorry
+
+🎮 <a href="https://aimekram.github.io/uneducated-guess/" target="_blank">Play Uneducated Guess</a>
 
 ## About
 

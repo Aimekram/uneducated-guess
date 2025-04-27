@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
-// import { AnswersList } from "./AnswersList";
+import { AnswersList } from "./AnswersList";
 
 type QuestionEditorProps = {
   id: string;
@@ -30,7 +30,7 @@ export const QuestionEditor = ({
   id: questionId,
   setId,
   text,
-  //   answers,
+  answers,
 }: QuestionEditorProps) => {
   const queryClient = useQueryClient();
   const [formError, setFormError] = useState<string | null>(null);
@@ -38,9 +38,7 @@ export const QuestionEditor = ({
   const updateQuestionRequest = useMutation({
     ...queries.questions.updateById(questionId),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queries.questionsWithAnswers.getBySetId(setId).queryKey,
-      });
+      queryClient.invalidateQueries(queries.questionsWithAnswers);
     },
     onError: (err) => {
       if (err instanceof Error) {
@@ -160,7 +158,11 @@ export const QuestionEditor = ({
       <CardContent className="space-y-4 pb-4 px-4">
         <div className="mt-4">
           <h4 className="text-sm font-medium mb-2">Answers</h4>
-          {/* <AnswersList answers={answers} questionId={questionId} editable /> */}
+          <AnswersList
+            answers={answers}
+            questionId={questionId}
+            setId={setId}
+          />
         </div>
       </CardContent>
     </Card>

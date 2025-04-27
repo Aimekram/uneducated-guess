@@ -62,7 +62,49 @@ export const queries = {
       },
     }),
   },
+  answers: {
+    create: (questionId: string) => ({
+      mutationFn: async ({
+        text,
+        points,
+      }: { text: string; points: number }) => {
+        const { data, error } = await supabase
+          .from("answers")
+          .insert({ text, points, question_id: questionId })
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    }),
+    updateById: (answerId: string) => ({
+      mutationFn: async ({
+        text,
+        points,
+      }: { text: string; points: number }) => {
+        const { data, error } = await supabase
+          .from("answers")
+          .update({ text, points })
+          .eq("id", answerId)
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    }),
+    deleteById: {
+      mutationFn: async ({ answerId }: { answerId: string }) => {
+        const { data, error } = await supabase
+          .from("answers")
+          .delete()
+          .eq("id", answerId);
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    },
+  },
   questionsWithAnswers: {
+    queryKey: ["questionsWithAnswers"],
     getBySetId: (setId: string) => ({
       queryKey: ["questionsWithAnswers", "getBySetId", setId],
       queryFn: async () => {

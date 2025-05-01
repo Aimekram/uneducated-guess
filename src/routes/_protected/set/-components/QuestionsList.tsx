@@ -1,7 +1,9 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
+import { AnswersList } from "./AnswersList";
 import { QuestionEditor } from "./QuestionEditor";
 
 type QuestionsListProps = {
@@ -48,13 +50,20 @@ export const QuestionsList = ({ setId }: QuestionsListProps) => {
   return (
     <div className="container space-y-6">
       {getQuestionsWithAnswersRequest.data.map((question) => (
-        <QuestionEditor
-          key={question.id}
-          id={question.id}
-          text={question.text}
-          answers={question.answers}
-          setId={setId}
-        />
+        <Card key={question.id}>
+          <CardHeader className="pb-3 pt-4 px-4">
+            <QuestionEditor id={question.id} text={question.text} />
+          </CardHeader>
+          <CardContent className="space-y-4 pb-4 px-4">
+            <div className="mt-4">
+              <h4 className="text-sm font-medium mb-2">Answers</h4>
+              <AnswersList
+                answers={question.answers}
+                questionId={question.id}
+              />
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

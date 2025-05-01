@@ -10,7 +10,6 @@ type AnswersListProps = {
     points: number;
   }[];
   questionId: string;
-  setId: string;
 };
 
 export const AnswersList = ({ answers, questionId }: AnswersListProps) => {

@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { AnswersList } from "./AnswersList";
+import { QuestionCreator } from "./QuestionCreator";
 import { QuestionEditor } from "./QuestionEditor";
 
 type QuestionsListProps = {
@@ -39,18 +40,23 @@ export const QuestionsList = ({ setId }: QuestionsListProps) => {
 
   if (getQuestionsWithAnswersRequest.data.length === 0) {
     return (
-      <Alert variant="default">
-        <AlertDescription>
-          No questions found for this set. Add some questions to get started!
-        </AlertDescription>
-      </Alert>
+      <div className="container space-y-6">
+        <QuestionCreator setId={setId} />
+        <Alert variant="default">
+          <AlertDescription>
+            No questions found for this set. Add a question above to get
+            started!
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   return (
     <div className="container space-y-6">
+      <QuestionCreator setId={setId} />
       {getQuestionsWithAnswersRequest.data.map((question) => (
-        <Card key={question.id}>
+        <Card key={question.id} className="gap-0">
           <CardHeader className="pb-3 pt-4 px-4">
             <QuestionEditor id={question.id} text={question.text} />
           </CardHeader>

@@ -51,6 +51,17 @@ export const queries = {
     }),
   },
   questions: {
+    create: {
+      mutationFn: async ({ text, setId }: { text: string; setId: string }) => {
+        const { data, error } = await supabase
+          .from("questions")
+          .insert({ text, set_id: setId })
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    },
     updateById: (questionId: string) => ({
       mutationFn: async ({ text }: { text: string }) => {
         const { data, error } = await supabase
@@ -130,7 +141,8 @@ export const queries = {
                   points
                 )
               `)
-          .eq("set_id", setId);
+          .eq("set_id", setId)
+          .order("created_at", { ascending: false });
         if (error) throw new Error(error.message);
         return data;
       },

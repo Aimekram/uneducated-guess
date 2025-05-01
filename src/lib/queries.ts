@@ -61,6 +61,16 @@ export const queries = {
         return data;
       },
     }),
+    deleteById: {
+      mutationFn: async ({ questionId }: { questionId: string }) => {
+        const { data, error } = await supabase
+          .from("questions")
+          .delete()
+          .eq("id", questionId);
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    },
   },
   answers: {
     create: (questionId: string) => ({

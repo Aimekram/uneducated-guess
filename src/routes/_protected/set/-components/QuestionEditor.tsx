@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { queries } from "@/lib/queries";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, X } from "lucide-react";
+import { Check, Trash, X } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -23,6 +23,8 @@ export const QuestionEditor = ({
 }: QuestionEditorProps) => {
   const queryClient = useQueryClient();
   const [formError, setFormError] = useState<string | null>(null);
+  const [showDeletionConfirmation, setShowDeletionConfirmation] =
+    useState(false);
 
   const updateQuestionRequest = useMutation({
     ...queries.questions.updateById(questionId),
@@ -33,8 +35,30 @@ export const QuestionEditor = ({
       if (err instanceof Error) {
         setFormError(err.message);
       } else {
-        setFormError("An unexpected error occurred. Please try again.");
+        setFormError(
+          "An unexpected error occurred when updating. Please refresh and try again.",
+        );
       }
+    },
+  });
+
+  const deleteQuestionRequest = useMutation({
+    ...queries.questions.deleteById,
+    onSuccess: () => {
+      queryClient.invalidateQueries(queries.questionsWithAnswers);
+      queryClient.invalidateQueries({
+        queryKey: queries.questionSets.queryKey,
+      });
+    },
+    onError: (err) => {
+      if (err instanceof Error) {
+        setFormError(err.message);
+      } else {
+        setFormError(
+          "An unexpected error occurred when deleting. Please refresh and try again.",
+        );
+      }
+      setShowDeletionConfirmation(false);
     },
   });
 
@@ -50,15 +74,47 @@ export const QuestionEditor = ({
   const handleCancel = () => {
     form.reset();
     setFormError(null);
+    if (showDeletionConfirmation) {
+      setShowDeletionConfirmation(false);
+    }
   };
 
+  const handleDelete = () => {
+    if (showDeletionConfirmation) {
+      deleteQuestionRequest.mutate({ questionId });
+    } else {
+      setShowDeletionConfirmation(true);
+    }
+  };
+
+  const isAnyRequestPending =
+    updateQuestionRequest.isPending || deleteQuestionRequest.isPending;
+
   return (
-    <>
+    <div className="relative">
+      <Button
+        type="button"
+        aria-label={
+          showDeletionConfirmation ? "Confirm deletion" : "Delete question"
+        }
+        size="sm"
+        variant={showDeletionConfirmation ? "destructive" : "ghost"}
+        onClick={handleDelete}
+        disabled={isAnyRequestPending}
+        className="absolute -top-7 right-0 z-10"
+      >
+        <Trash className="h-3.5 w-3.5 mr-1 text-inherit" />
+        <span>
+          {showDeletionConfirmation ? "Confirm deletion" : "Delete question"}
+        </span>
+      </Button>
+
       {formError && (
         <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm mb-3">
           {formError}
         </div>
       )}
+
       <form
         className="space-y-4"
         onSubmit={(e) => {
@@ -93,7 +149,7 @@ export const QuestionEditor = ({
                       handleCancel();
                     }
                   }}
-                  disabled={updateQuestionRequest.isPending}
+                  disabled={isAnyRequestPending}
                   className={
                     field.state.meta.isDirty
                       ? "border-amber-400 bg-amber-100 border-2"
@@ -107,10 +163,7 @@ export const QuestionEditor = ({
                     size="icon"
                     variant="ghost"
                     onClick={handleCancel}
-                    disabled={
-                      updateQuestionRequest.isPending ||
-                      !field.state.meta.isDirty
-                    }
+                    disabled={isAnyRequestPending || !field.state.meta.isDirty}
                     className="h-9"
                   >
                     <X className="h-3 w-3 text-destructive" />
@@ -122,7 +175,7 @@ export const QuestionEditor = ({
                     variant="outline"
                     disabled={
                       !form.state.canSubmit ||
-                      updateQuestionRequest.isPending ||
+                      isAnyRequestPending ||
                       form.state.isSubmitting ||
                       !field.state.meta.isDirty
                     }
@@ -141,6 +194,6 @@ export const QuestionEditor = ({
           )}
         </form.Field>
       </form>
-    </>
+    </div>
   );
 };

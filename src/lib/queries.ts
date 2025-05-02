@@ -49,6 +49,16 @@ export const queries = {
         return data;
       },
     }),
+    deleteById: {
+      mutationFn: async ({ setId }: { setId: string }) => {
+        const { data, error } = await supabase
+          .from("question_sets")
+          .delete()
+          .eq("id", setId);
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    },
   },
   questions: {
     create: {

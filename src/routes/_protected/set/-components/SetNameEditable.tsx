@@ -40,7 +40,7 @@ export const SetNameEditable = ({
   }
 
   return (
-    <div className="mb-8 flex items-center gap-4 min-h-9">
+    <div className="flex items-center gap-4 min-h-9">
       <h1 className="text-xl font-semibold">
         <span className="mr-2">Set name:</span>
         <span>{name}</span>

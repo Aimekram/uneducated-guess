@@ -4,6 +4,7 @@ import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { QuestionsList } from "./-components/QuestionsList";
+import { SetDeletionButtons } from "./-components/SetDeletionButtons";
 import { SetNameEditor } from "./-components/SetNameEditor";
 
 export const Route = createFileRoute("/_protected/set/$setId")({
@@ -46,7 +47,10 @@ function RouteComponent() {
 
   return (
     <div className="container mx-auto p-4">
-      <SetNameEditor setId={setId} />
+      <div className="mb-8 flex justify-between gap-4">
+        <SetNameEditor setId={setId} />
+        <SetDeletionButtons setId={setId} />
+      </div>
       <h2 className="text-lg font-semibold mb-2">Questions</h2>
       <QuestionsList setId={setId} />
     </div>

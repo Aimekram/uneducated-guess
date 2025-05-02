@@ -65,7 +65,7 @@ export const SetNameEditor = ({ setId }: SetNameEditorProps) => {
   }
 
   return (
-    <div className="mb-8 max-w-xl">
+    <div className="max-w-xl">
       {formError && (
         <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-3 text-sm">
           {formError}

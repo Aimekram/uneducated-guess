@@ -92,22 +92,36 @@ export const QuestionEditor = ({
 
   return (
     <div className="relative">
-      <Button
-        type="button"
-        aria-label={
-          showDeletionConfirmation ? "Confirm deletion" : "Delete question"
-        }
-        size="sm"
-        variant={showDeletionConfirmation ? "destructive" : "ghost"}
-        onClick={handleDelete}
-        disabled={isAnyRequestPending}
-        className="absolute -top-7 right-0 z-10"
-      >
-        <Trash className="h-3.5 w-3.5 mr-1 text-inherit" />
-        <span>
-          {showDeletionConfirmation ? "Confirm deletion" : "Delete question"}
-        </span>
-      </Button>
+      <div className="absolute -top-7 right-0 flex gap-2">
+        {showDeletionConfirmation && (
+          <Button
+            type="button"
+            aria-label="Cancel deletion"
+            size="sm"
+            variant="ghost"
+            onClick={handleCancel}
+            disabled={isAnyRequestPending}
+          >
+            <X className="h-3.5 w-3.5 mr-1 text-destructive" />
+            <span>Cancel</span>
+          </Button>
+        )}
+        <Button
+          type="button"
+          aria-label={
+            showDeletionConfirmation ? "Confirm deletion" : "Delete question"
+          }
+          size="sm"
+          variant={showDeletionConfirmation ? "destructive" : "ghost"}
+          onClick={handleDelete}
+          disabled={isAnyRequestPending}
+        >
+          <Trash className="h-3.5 w-3.5 mr-1 text-inherit" />
+          <span>
+            {showDeletionConfirmation ? "Confirm deletion" : "Delete question"}
+          </span>
+        </Button>
+      </div>
 
       {formError && (
         <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm mb-3">

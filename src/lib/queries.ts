@@ -6,11 +6,14 @@ export const queries = {
     getAll: {
       queryKey: ["questionSets", "getAll"],
       queryFn: async () => {
-        const { data, error } = await supabase.from("question_sets").select(`
+        const { data, error } = await supabase
+          .from("question_sets")
+          .select(`
             id,
             name,
             questionsCount: questions(count)
-          `);
+          `)
+          .order("created_at", { ascending: false });
         if (error) throw new Error(error.message);
         return data.map((set) => ({
           ...set,
@@ -37,6 +40,28 @@ export const queries = {
         };
       },
     }),
+    create: {
+      mutationFn: async ({ name }: { name: string }) => {
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
+        if (sessionError) {
+          throw new Error(sessionError.message);
+        }
+        if (!sessionData.session?.user?.id) {
+          throw new Error("You must be logged in to create a question set");
+        }
+        const { data, error } = await supabase
+          .from("question_sets")
+          .insert({
+            name,
+            created_by: sessionData.session.user.id,
+          })
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        return data;
+      },
+    },
     updateById: (setId: string) => ({
       mutationFn: async ({ name }: { name: string }) => {
         const { data, error } = await supabase

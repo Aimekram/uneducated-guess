@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { queries } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import { Link } from "@tanstack/react-router";
 import { Edit } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import { QandAList } from "./QandAList";
+import { SetCreator } from "./SetCreator";
 
 export const QuestionSetsList = () => {
   const getQuestsionSetsRequest = useQuery(queries.questionSets.getAll);
@@ -18,6 +20,7 @@ export const QuestionSetsList = () => {
   if (getQuestsionSetsRequest.isError) {
     return (
       <Layout>
+        <SetCreator />
         <h3 className="mb-4 text-red-500">
           Couldn't get your data, please refresh and try again
         </h3>
@@ -39,13 +42,19 @@ export const QuestionSetsList = () => {
   ) {
     return (
       <Layout>
-        <h3 className="mb-4 text-gray-500">No question sets found</h3>
+        <SetCreator />
+        <Alert variant="default">
+          <AlertDescription>
+            No question sets found. Add a question set above to get started!
+          </AlertDescription>
+        </Alert>
       </Layout>
     );
   }
 
   return (
     <Layout>
+      <SetCreator />
       <Accordion type="single" collapsible className="grid gap-4 grid-cols-1">
         {getQuestsionSetsRequest.data.map((set) => (
           <AccordionItem
